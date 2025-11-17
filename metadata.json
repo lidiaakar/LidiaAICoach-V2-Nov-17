@@ -1,0 +1,8 @@
+{
+  "name": "Nov 17 V5 LIVE LIDIA AI Coach",
+  "description": "An AI-powered coaching platform to help users improve their communication skills through personalized plans, interactive sessions, and actionable feedback.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}

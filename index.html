@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lidia AI Communication Coach</title>
+    <!-- Include Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Preconnect to Google Fonts for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Include the Inter font family -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Configure Tailwind CSS with custom theme extensions -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              'off-white': '#FDFCF9',
+              'brand-gold': '#D4AF37',
+              'brand-gold-light': '#EACD70',
+              'brand-gold-dark': '#B89B2E',
+              'brand-dark': '#2c2c2c',
+            }
+          }
+        }
+      }
+    </script>
+  <!-- Import Map for ES Modules: Allows using bare module specifiers like "react" -->
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "react/": "https://aistudiocdn.com/react@^19.1.1/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.20.0"
+  }
+}
+</script>
+</head>
+  <body>
+    <!-- The root element where the React application will be mounted -->
+    <div id="root"></div>
+    <!-- The script that loads and runs the React application -->
+    <script type="module" src="index.tsx"></script>
+  </body>
+</html>
