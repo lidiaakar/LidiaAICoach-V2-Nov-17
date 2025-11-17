@@ -15,9 +15,9 @@ interface ErrorBoundaryState {
  * the component tree that crashed.
  */
 class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  // FIX: Replaced the class property initializer for state with a constructor.
-  // Using a constructor and calling `super(props)` is the standard way to initialize a class component,
-  // and it resolves the TypeScript errors where `this.props` and `this.setState` were not being recognized.
+  // FIX: Use a constructor to initialize state. The class property syntax can cause issues
+  // in some build environments, leading to `this.props` being unrecognized. A constructor
+  // is a more robust way to ensure the component is initialized correctly.
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false };

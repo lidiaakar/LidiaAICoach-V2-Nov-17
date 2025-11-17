@@ -28,7 +28,6 @@ export const getAiInstance = (): GoogleGenAI => {
 
     // Defensively check for the `process` object to avoid a ReferenceError in
     // browser-only environments where it might not be defined.
-    console.log("api",process.env)
     const apiKey = (typeof process !== 'undefined' && process.env) ? process.env.API_KEY : undefined;
 
     if (!apiKey) {
@@ -168,7 +167,7 @@ export const generateCoachingPlan = async (userData: UserData): Promise<Coaching
     const ai = getAiInstance();
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
-      contents: { parts: [{ text: prompt }] },
+      contents: prompt,
       config: {
         responseMimeType: "application/json",
         responseSchema: coachingPlanSchema,
@@ -692,7 +691,7 @@ export const generateDynamicDrill = async (nextSteps: FeedbackItem[], language: 
         const ai = getAiInstance();
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
-            contents: { parts: [{ text: prompt }] },
+            contents: prompt,
             config: {
                 responseMimeType: "application/json",
                 responseSchema: dynamicDrillSchema,
@@ -741,7 +740,7 @@ export const findSupportingStat = async (text: string, language: LanguageCode): 
         const ai = getAiInstance();
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
-            contents: { parts: [{ text: prompt }] },
+            contents: prompt,
             config: {
                 tools: [{ googleSearch: {} }],
             },
