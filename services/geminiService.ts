@@ -28,6 +28,7 @@ export const getAiInstance = (): GoogleGenAI => {
 
     // Defensively check for the `process` object to avoid a ReferenceError in
     // browser-only environments where it might not be defined.
+    console.log("api",process.env)
     const apiKey = (typeof process !== 'undefined' && process.env) ? process.env.API_KEY : undefined;
 
     if (!apiKey) {
