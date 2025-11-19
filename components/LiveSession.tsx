@@ -14,7 +14,6 @@ type TranscriptItem = {
 };
 
 // FIX: Moved the AIStudio interface into the global declaration to prevent potential scope conflicts
-// that can lead to "Subsequent property declarations must have the same type" errors.
 declare global {
     // A global declaration for the `aistudio` object on the window,
     // which is used for the mandatory API key selection flow.
@@ -43,6 +42,15 @@ const LiveSession: React.FC<LiveSessionProps> = ({ language, onBackToDashboard }
   // --- API Key Handling ---
   useEffect(() => {
       const checkApiKey = async () => {
+          // FIX: Check if the API key is already available in the environment (e.g. Vercel).
+          // This allows the app to bypass the AI Studio selection flow if deployed with a key.
+          const envKey = (typeof process !== 'undefined' && process.env) ? process.env.API_KEY : undefined;
+          if (envKey) {
+              setIsApiKeySelected(true);
+              setIsCheckingApiKey(false);
+              return;
+          }
+
           if (window.aistudio && typeof window.aistudio.hasSelectedApiKey === 'function') {
               const hasKey = await window.aistudio.hasSelectedApiKey();
               setIsApiKeySelected(hasKey);

@@ -15,12 +15,12 @@ interface ErrorBoundaryState {
  * the component tree that crashed.
  */
 class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  // FIX: Use a constructor to initialize state. The class property syntax can cause issues
-  // in some build environments, leading to `this.props` being unrecognized. A constructor
-  // is a more robust way to ensure the component is initialized correctly.
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false };
+    // FIX: Bind the event handler in the constructor to ensure `this` context is correct
+    // and to avoid issues with class field syntax in certain build environments.
+    this.handleReset = this.handleReset.bind(this);
   }
 
   /**
@@ -41,13 +41,14 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     console.error("Uncaught error:", error, errorInfo);
   }
   
-  // FIX: Added a reset handler to clear the error boundary's state. The original implementation
-  // would not have cleared the error screen, as it only reset the parent component's state.
-  // This handler now resets both the app and the error boundary.
-  handleReset = () => {
+  /**
+   * Resets the application state via the onReset prop and also resets the
+   * error boundary's own state to remove the fallback UI.
+   */
+  handleReset() {
     this.props.onReset();
     this.setState({ hasError: false });
-  };
+  }
 
 
   /**

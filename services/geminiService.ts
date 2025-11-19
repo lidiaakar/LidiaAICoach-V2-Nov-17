@@ -174,6 +174,8 @@ export const generateCoachingPlan = async (userData: UserData): Promise<Coaching
       },
     });
 
+ 
+
     const jsonText = response.text;
     if (!jsonText) {
         throw new Error("AI response for coaching plan was empty.");

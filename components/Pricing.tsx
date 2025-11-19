@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslations } from '../contexts/LanguageContext';
 
 interface PricingProps {
@@ -19,8 +19,9 @@ const CheckIcon: React.FC = () => (
  */
 const Pricing: React.FC<PricingProps> = ({ onSelectPlan }) => {
   const { t } = useTranslations();
+  const [view, setView] = useState<'individual' | 'b2b'>('individual');
 
-  const plans = [
+  const individualPlans = [
     {
       name: 'Free',
       title: t('pricing.free.title'),
@@ -67,18 +68,82 @@ const Pricing: React.FC<PricingProps> = ({ onSelectPlan }) => {
       isPopular: false,
     },
   ];
+  
+  const b2bPlans = [
+    {
+      name: 'Teams',
+      title: t('pricing.teams.title'),
+      price: t('pricing.teams.price'),
+      description: t('pricing.teams.description'),
+      features: [
+        t('pricing.teams.feature1'),
+        t('pricing.teams.feature2'),
+        t('pricing.teams.feature3'),
+        t('pricing.teams.feature4'),
+      ],
+      buttonText: t('pricing.button.choose'),
+      isPopular: false,
+    },
+    {
+      name: 'Business',
+      title: t('pricing.business.title'),
+      price: t('pricing.business.price'),
+      description: t('pricing.business.description'),
+      features: [
+        t('pricing.business.feature1'),
+        t('pricing.business.feature2'),
+        t('pricing.business.feature3'),
+        t('pricing.business.feature4'),
+        t('pricing.business.feature5'),
+      ],
+      buttonText: t('pricing.button.choose'),
+      isPopular: true,
+    },
+    {
+      name: 'EnterpriseB2B',
+      title: t('pricing.enterprise.b2b.title'),
+      price: t('pricing.enterprise.price'),
+      description: t('pricing.enterprise.b2b.description'),
+      features: [
+        t('pricing.enterprise.b2b.feature1'),
+        t('pricing.enterprise.b2b.feature2'),
+        t('pricing.enterprise.b2b.feature3'),
+        t('pricing.enterprise.b2b.feature4'),
+        t('pricing.enterprise.b2b.feature5'),
+      ],
+      buttonText: t('pricing.button.contact'),
+      isPopular: false,
+    },
+  ];
+
+  const plansToDisplay = view === 'individual' ? individualPlans : b2bPlans;
 
   return (
     <div className="max-w-5xl mx-auto">
       <div className="text-center mb-12">
         <h2 className="text-3xl md:text-4xl font-bold text-brand-dark">{t('pricing.title')}</h2>
         <p className="mt-4 text-lg text-gray-600">{t('pricing.intro')}</p>
+
+        <div className="mt-8 inline-flex bg-gray-100 p-1 rounded-full">
+            <button
+                onClick={() => setView('individual')}
+                className={`px-6 py-2 rounded-full font-semibold transition-colors ${view === 'individual' ? 'bg-white text-brand-dark shadow' : 'text-gray-600'}`}
+            >
+                {t('pricing.b2b.toggle.individual')}
+            </button>
+            <button
+                onClick={() => setView('b2b')}
+                className={`px-6 py-2 rounded-full font-semibold transition-colors ${view === 'b2b' ? 'bg-white text-brand-dark shadow' : 'text-gray-600'}`}
+            >
+                {t('pricing.b2b.toggle.b2b')}
+            </button>
+        </div>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
-        {plans.map((plan) => (
+        {plansToDisplay.map((plan) => (
           <div
             key={plan.name}
-            className={`bg-white rounded-2xl p-8 shadow-lg border transition-transform duration-300 ${plan.isPopular ? 'border-brand-gold-dark scale-105 shadow-brand-gold/20' : 'border-gray-200/80 hover:-translate-y-2'}`}
+            className={`bg-white rounded-2xl p-8 shadow-lg border transition-transform duration-300 h-full flex flex-col ${plan.isPopular ? 'border-brand-gold-dark scale-105 shadow-brand-gold/20' : 'border-gray-200/80 hover:-translate-y-2'}`}
           >
             {plan.isPopular && (
               <div className="text-center mb-4">
@@ -98,7 +163,7 @@ const Pricing: React.FC<PricingProps> = ({ onSelectPlan }) => {
             </ul>
             <button
               onClick={() => onSelectPlan(plan.name)}
-              className={`w-full font-bold py-3 px-4 rounded-lg transition-colors ${plan.isPopular ? 'bg-brand-gold text-white hover:bg-brand-gold-dark' : 'bg-brand-gold/10 text-brand-gold-dark hover:bg-brand-gold/20'}`}
+              className={`w-full font-bold py-3 px-4 rounded-lg transition-colors mt-auto ${plan.isPopular ? 'bg-brand-gold text-white hover:bg-brand-gold-dark' : 'bg-brand-gold/10 text-brand-gold-dark hover:bg-brand-gold/20'}`}
             >
               {plan.buttonText}
             </button>
