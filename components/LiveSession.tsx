@@ -43,9 +43,8 @@ const LiveSession: React.FC<LiveSessionProps> = ({ language, onBackToDashboard }
   useEffect(() => {
       const checkApiKey = async () => {
           // FIX: Check if the API key is already available in the environment (e.g. Vercel).
-          // This allows the app to bypass the AI Studio selection flow if deployed with a key.
-          const envKey = (typeof process !== 'undefined' && process.env) ? process.env.API_KEY : undefined;
-          if (envKey) {
+          // We directly access process.env.API_KEY here to ensure the build tool can replace it.
+          if (process.env.API_KEY) {
               setIsApiKeySelected(true);
               setIsCheckingApiKey(false);
               return;

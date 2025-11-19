@@ -10,34 +10,19 @@ let aiInstance: GoogleGenAI | null = null;
 
 /**
  * A helper function to lazily initialize and cache the Google GenAI client.
- * This function is called before each API request. It ensures that an error
- * about a missing API key is thrown during user interaction (and caught by local
- * error handlers) rather than crashing the app on startup. It also caches the
- * instance for performance and defensively checks for the `process` object to
- * prevent crashes in environments without a build step.
  * 
  * @returns A singleton instance of the GoogleGenAI client.
- * @throws An error if the API_KEY environment variable is not set or accessible.
  */
-// FIX: Export the `getAiInstance` function so it can be used in other modules.
 export const getAiInstance = (): GoogleGenAI => {
     // Return the cached instance if it already exists.
     if (aiInstance) {
         return aiInstance;
     }
 
-    // Defensively check for the `process` object to avoid a ReferenceError in
-    // browser-only environments where it might not be defined.
-    const apiKey = (typeof process !== 'undefined' && process.env) ? process.env.API_KEY : undefined;
-
-    if (!apiKey) {
-        // This error is intended to be caught by the `handleGeminiError` function
-        // in the calling service, which will then display a user-friendly message.
-        throw new Error("API_KEY environment variable is not set or accessible in this environment.");
-    }
-    
-    // Create and cache the instance for future use.
-    aiInstance = new GoogleGenAI({ apiKey });
+    // Explicitly use process.env.API_KEY as requested. 
+    // This direct usage allows bundlers (like Webpack or Vite) to perform 
+    // string replacement of the environment variable during the build.
+    aiInstance = new GoogleGenAI({ apiKey: process.env.API_KEY });
     return aiInstance;
 };
 
