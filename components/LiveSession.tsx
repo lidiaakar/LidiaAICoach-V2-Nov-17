@@ -42,19 +42,9 @@ const LiveSession: React.FC<LiveSessionProps> = ({ language, onBackToDashboard }
   // --- API Key Handling ---
   useEffect(() => {
       const checkApiKey = async () => {
-          // FIX: Check for API key in all possible client-side locations (Vite, CRA, Process).
-          let envKey: string | undefined = undefined;
-          
-          // @ts-ignore
-          if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_KEY) {
-              // @ts-ignore
-              envKey = import.meta.env.VITE_API_KEY;
-          } else if (typeof process !== 'undefined' && process.env && process.env.REACT_APP_API_KEY) {
-              envKey = process.env.REACT_APP_API_KEY;
-          } else if (typeof process !== 'undefined' && process.env && process.env.API_KEY) {
-              envKey = process.env.API_KEY;
-          }
-
+          // FIX: Check if the API key is already available in the environment (e.g. Vercel).
+          // This allows the app to bypass the AI Studio selection flow if deployed with a key.
+          const envKey = (typeof process !== 'undefined' && process.env) ? process.env.API_KEY : undefined;
           if (envKey) {
               setIsApiKeySelected(true);
               setIsCheckingApiKey(false);
