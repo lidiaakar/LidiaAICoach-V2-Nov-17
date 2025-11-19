@@ -9,26 +9,48 @@ import { supportedLanguages } from '../types';
 let aiInstance: GoogleGenAI | null = null;
 
 /**
+ * Helper to retrieve the API key from various environment variable patterns.
+ * Handles Vite (import.meta.env.VITE_API_KEY), Create React App (process.env.REACT_APP_API_KEY),
+ * and standard Node.js (process.env.API_KEY).
+ */
+const getApiKey = (): string | undefined => {
+    // 1. Check for Vite environment variable
+    // @ts-ignore - import.meta is a valid property in Vite/ESM environments
+    if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_KEY) {
+        // @ts-ignore
+        return import.meta.env.VITE_API_KEY;
+    }
+    
+    // 2. Check for Create React App environment variable
+    if (typeof process !== 'undefined' && process.env && process.env.REACT_APP_API_KEY) {
+        return process.env.REACT_APP_API_KEY;
+    }
+
+    // 3. Check for standard process.env (Node.js or manually configured)
+    if (typeof process !== 'undefined' && process.env && process.env.API_KEY) {
+        return process.env.API_KEY;
+    }
+    
+    return undefined;
+};
+
+/**
  * A helper function to lazily initialize and cache the Google GenAI client.
  * This function is called before each API request. It ensures that an error
  * about a missing API key is thrown during user interaction (and caught by local
  * error handlers) rather than crashing the app on startup. It also caches the
- * instance for performance and defensively checks for the `process` object to
- * prevent crashes in environments without a build step.
+ * instance for performance.
  * 
  * @returns A singleton instance of the GoogleGenAI client.
  * @throws An error if the API_KEY environment variable is not set or accessible.
  */
-// FIX: Export the `getAiInstance` function so it can be used in other modules.
 export const getAiInstance = (): GoogleGenAI => {
     // Return the cached instance if it already exists.
     if (aiInstance) {
         return aiInstance;
     }
 
-    // Defensively check for the `process` object to avoid a ReferenceError in
-    // browser-only environments where it might not be defined.
-    const apiKey = (typeof process !== 'undefined' && process.env) ? process.env.API_KEY : undefined;
+    const apiKey = getApiKey();
 
     if (!apiKey) {
         // This error is intended to be caught by the `handleGeminiError` function
